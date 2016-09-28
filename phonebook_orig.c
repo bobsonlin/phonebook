@@ -6,7 +6,7 @@
 #include "phonebook_orig.h"
 
 /* original version */
-entry *findName(char lastName[], entry *pHead)
+entry *findName_LinkList(char lastName[], entry *pHead)
 {
     while (pHead != NULL) {
         if (strcasecmp(lastName, pHead->lastName) == 0)
@@ -16,7 +16,7 @@ entry *findName(char lastName[], entry *pHead)
     return NULL;
 }
 
-entry *append(char lastName[], entry *e)
+entry *append_LinkList(char lastName[], entry *e)
 {
     /* allocate memory for the new entry and put lastName */
     e->pNext = (entry *) malloc(sizeof(entry));

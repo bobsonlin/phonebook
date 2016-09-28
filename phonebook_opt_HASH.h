@@ -1,13 +1,13 @@
-#ifndef _PHONEBOOK_OPT_H
-#define _PHONEBOOK_OPT_H
+#ifndef _PHONEBOOK_OPT_HASH_H
+#define _PHONEBOOK_OPT_HASH_H
 
 #define MAX_LAST_NAME_SIZE 16
-#define TWO_POWER_NUM 8
-#define MAX_HASH_TABLE_SIZE 1 << TWO_POWER_NUM
+#define TABLE_SIZE 42737
 
 /* TODO: After modifying the original version, uncomment the following
  * line to set OPT properly */
 #define OPT 1
+#define HASH 1
 
 typedef struct __PHONE_DETAIL_INFO {
     char firstName[16];
@@ -27,24 +27,19 @@ typedef struct __PHONE_BOOK_ENTRY {
     struct __PHONE_BOOK_ENTRY *pNext;
 } entry;
 
+typedef struct __PHONE_BOOK_HASH {
+    entry **list;
+} hashTable;
 
-typedef struct __HASH_SLOT {
-    entry *data;
-    struct __HASH_SLOT *pNext;
-} slot_unit;
-
-//slot_unit* hashTable[MAX_HASH_TABLE_SIZE];
-
-
+/*
 entry *findName_LinkList(char lastName[], entry *pHead);
 entry *append_LinkList(char lastName[], entry *e);
-/*
-entry *findName_HashTable(char lastName[]);
-entry *append_HashTable(char lastName[]);
-
-unsigned int stringToInt(char *key);
-
-unsigned int hashFunction(unsigned int key);
 */
+
+entry *findName_HashTable(char lastName[], hashTable *tb);
+void append_HashTable(char lastName[], hashTable *tb);
+hashTable *createHashTable(int tablesize);
+unsigned int hash(char *str);
+
 
 #endif

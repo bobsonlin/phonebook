@@ -3,7 +3,7 @@ CFLAGS_common ?= -Wall -std=gnu99
 CFLAGS_orig = -O0
 CFLAGS_opt  = -O0
 
-EXEC = phonebook_orig phonebook_opt
+EXEC = phonebook_orig phonebook_opt phonebook_opt_HASH
 all: $(EXEC)
 
 SRCS_common = main.c
@@ -18,11 +18,16 @@ phonebook_opt: $(SRCS_common) phonebook_opt.c phonebook_opt.h
 		-DIMPL="\"$@.h\"" -o $@ \
 		$(SRCS_common) $@.c
 
+phonebook_opt_HASH: $(SRCS_common) phonebook_opt_HASH.c phonebook_opt_HASH.h
+	$(CC) $(CFLAGS_common) $(CFLAGS_opt) \
+		-DIMPL="\"$@.h\"" -o $@ \
+		$(SRCS_common) $@.c
 run: $(EXEC)
 	echo 3 | sudo tee /proc/sys/vm/drop_caches
-	watch -d -t "./phonebook_opt && echo 3 | sudo tee /proc/sys/vm/drop_caches"
+	watch -d -t "./phonebook_opt_HASH && echo 3 | sudo tee /proc/sys/vm/drop_caches"
 #	watch -d -t "./phonebook_orig && echo 3 | sudo tee /proc/sys/vm/drop_caches"
 
+#100
 cache-test: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
@@ -30,6 +35,9 @@ cache-test: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt
+	perf stat --repeat 100 \
+		-e cache-misses,cache-references,instructions,cycles \
+		./phonebook_opt_HASH
 
 output.txt: cache-test calculate
 	./calculate
@@ -43,4 +51,4 @@ calculate: calculate.c
 .PHONY: clean
 clean:
 	$(RM) $(EXEC) *.o perf.* \
-	      	calculate orig.txt opt.txt output.txt runtime.png
+	      	calculate orig.txt opt.txt opt_HASH.txt output.txt runtime.png
