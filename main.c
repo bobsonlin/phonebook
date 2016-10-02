@@ -24,7 +24,10 @@ static double diff_in_second(struct timespec t1, struct timespec t2)
 int main(int argc, char *argv[])
 {
     FILE *fp;
+#if defined(OPT_FGETS)
+#else
     int i = 0;
+#endif
     char line[MAX_LAST_NAME_SIZE];
     struct timespec start, end;
     double cpu_time1, cpu_time2;
@@ -64,11 +67,20 @@ int main(int argc, char *argv[])
 #endif
     clock_gettime(CLOCK_REALTIME, &start);
     while (fgets(line, sizeof(line), fp)) {
+#if defined(OPT_FGETS)
+
+#else
         while (line[i] != '\0')
             i++;
         line[i - 1] = '\0';
         i = 0;
-
+#endif
+        /*
+                while (line[i] != '\0')
+                    i++;
+                line[i - 1] = '\0';
+                i = 0;
+        */
 #if defined(HASH)
         append_HashTable(line, tb);
 #else
@@ -119,14 +131,17 @@ int main(int argc, char *argv[])
 
     FILE *output;
 #if defined(OPT)
-//   output = fopen("opt.txt", "a");
 #if defined(HASH)
     output = fopen("opt_HASH.txt", "a");
 #else
     output = fopen("opt.txt", "a");
 #endif
 #else
+#if defined(OPT_FGETS)
+    output = fopen("opt_fgets.txt", "a");
+#else
     output = fopen("orig.txt", "a");
+#endif
 #endif
     fprintf(output, "append() findName() %lf %lf\n", cpu_time1, cpu_time2);
     fclose(output);

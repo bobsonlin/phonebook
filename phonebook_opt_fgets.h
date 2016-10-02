@@ -2,13 +2,10 @@
 #define _PHONEBOOK_OPT_H
 
 #define MAX_LAST_NAME_SIZE 16
-/*
-#define TWO_POWER_NUM 8
-#define MAX_HASH_TABLE_SIZE 1 << TWO_POWER_NUM
-*/
+
 /* TODO: After modifying the original version, uncomment the following
  * line to set OPT properly */
-#define OPT 1
+#define OPT_FGETS 1
 
 typedef struct __PHONE_DETAIL_INFO {
     char firstName[16];

@@ -71,10 +71,31 @@ int main(void)
         opt_HASH_sum_a += opt_HASH_a;
         opt_HASH_sum_f += opt_HASH_f;
     }
+    fclose(fp);
+
+    fp = fopen("opt_fgets.txt", "r");
+    if (!fp) {
+        fp = fopen("orig.txt", "r");
+        if (!fp) {
+            printf("ERROR opening input file opt.txt\n");
+            exit(0);
+        }
+    }
+    double opt_fgets_sum_a = 0.0, opt_fgets_sum_f = 0.0, opt_fgets_a, opt_fgets_f;
+    for (i = 0; i < REPEAT_NUM; i++) {
+        if (feof(fp)) {
+            printf("ERROR: You need 100 datum instead of %d\n", i);
+            printf("run 'make run' longer to get enough information\n\n");
+            exit(0);
+        }
+        fscanf(fp, "%s %s %lf %lf\n", append, find, &opt_fgets_a, &opt_fgets_f);
+        opt_fgets_sum_a += opt_fgets_a;
+        opt_fgets_sum_f += opt_fgets_f;
+    }
 
 
-    fprintf(output, "append() %lf %lf %lf\n",orig_sum_a / (double)REPEAT_NUM, opt_sum_a / (double)REPEAT_NUM, opt_HASH_sum_a / (double)REPEAT_NUM);
-    fprintf(output, "findName() %lf %lf %lf", orig_sum_f / (double)REPEAT_NUM, opt_sum_f / (double)REPEAT_NUM, opt_HASH_sum_f / (double)REPEAT_NUM);
+    fprintf(output, "append() %lf %lf %lf %lf\n",orig_sum_a / (double)REPEAT_NUM, opt_sum_a / (double)REPEAT_NUM, opt_HASH_sum_a / (double)REPEAT_NUM, opt_fgets_sum_a / (double)REPEAT_NUM);
+    fprintf(output, "findName() %lf %lf %lf %lf", orig_sum_f / (double)REPEAT_NUM, opt_sum_f / (double)REPEAT_NUM, opt_HASH_sum_f / (double)REPEAT_NUM, opt_fgets_sum_f / (double)REPEAT_NUM);
     fclose(output);
     fclose(fp);
     return 0;
